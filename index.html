@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .country {
+            fill: #ccc;
+            stroke: #999;
+        }
+
+        .test {
+            fill: red;
+        }
+
+    </style>
+
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>Hypothesis</h2>
+<p>The population of 18 year olds will be greater in countries with higher population densities. Some countries that will have this greater population are India, China, United States, and London.</p>
+<br>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-geo@3"></script>
+<script src="https://d3js.org/topojson.v1.min.js"></script>
+
+<script>
+    const width = 900;
+    const height = 600;
+
+    const svg = d3.select('body').append('svg').attr('width', width).attr('height', height);
+
+    const projection = d3.geoNaturalEarth1().scale(140).translate([width / 2.5, height / 2.5]);
+    const path = d3.geoPath(projection);
+    const g = svg.append('g');
+
+    d3.json('countries-110m.json')
+        .then(data => {
+
+            const countries = topojson.feature(data, data.objects.countries);
+            if (countries.id === '124') {
+                g.select('path').data(countries.features).enter().append('path').attr('class', 'test').attr('d', path);
+            } else {
+                g.selectAll('path').data(countries.features).enter().append('path').attr('class', 'country').attr('d', path);
+            }
+
+        });
+
+</script>
+
+
+</body>
+</html>
